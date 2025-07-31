@@ -7,30 +7,28 @@ metricbeat.config.modules:
 # Kibana Setup (for dashboards)
 setup.kibana:
   host: "https://kibana:5601"
-  username: "elastic"
-  password: "${ELASTIC_PASSWORD}"  
-  ssl:
-    enable: true
-    certificate_authorities: ["/usr/share/metricbeat/certs/ca/ca.crt"]
-    verification_mode: "certificate"
+  username: "kibana_system"
+  password: "${KIBANA_PASSWORD}"  # OR replace with actual value
+
+  ssl.enabled: true
+  ssl.verification_mode: certificate
+  ssl.certificate_authorities:
+    - "/usr/share/metricbeat/certs/ca/ca.crt"
 
 # Output to Elasticsearch
 output.elasticsearch:
   hosts: ["https://es01:9200"]
   username: "elastic"
   password: "${ELASTIC_PASSWORD}"  # OR replace with actual value
-  ssl:
-    enable: true
-    certificate_authorities: ["/usr/share/metricbeat/certs/ca/ca.crt"]
-    verification_mode: "certificate"
+
+  ssl.certificate_authorities:
+    - "/usr/share/metricbeat/certs/ca/ca.crt"
+  ssl.verification_mode: certificate
 
 # Add metadata
 processors:
   - add_host_metadata: ~
   - add_docker_metadata: ~
-  - add_cloud_metadata: ~
-  - add_kubernetes_metadata: ~
-
 
 # Enable Docker monitoring
 metricbeat.modules:
@@ -66,12 +64,6 @@ metricbeat.modules:
     enabled: true
 
 monitoring.enabled: true
-monitoring.elasticsearch:
-  username: "elastic"
-  password: "${ELASTIC_PASSWORD}"
-  hosts: ["https://es01:9200"]
-  ssl:
-    certificate_authorities: ["/usr/share/metricbeat/certs/ca/ca.crt"]  
 
 # Logging
 logging.level: info
